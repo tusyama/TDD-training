@@ -1,4 +1,14 @@
 function romanToInt(str) {
+  if (typeof str !== "string") {
+    throw new TypeError();
+  }
+  if (str.length < 1) {
+    throw new Error("string is too short");
+  }
+  if (/[a-z]/.test(str)) {
+    throw new Error("no lowercase allowed");
+  }
+
   let res = 0;
 
   const number = (l) => {
@@ -32,29 +42,46 @@ function romanToInt(str) {
     }
   }
 
-  return res.toString();
+  return res;
 }
 
+// function intToRoman(number) {
+
+// }
+
 describe("romanToInt", () => {
-  it("III → 3", () => {
-    expect(romanToInt("III")).toBe("3");
+  test("V → 5", () => {
+    expect(romanToInt("V")).toBe(5);
   });
-  it("IV → 4", () => {
-    expect(romanToInt("IV")).toBe("4");
+
+  test("III → 3", () => {
+    expect(romanToInt("III")).toBe(3);
   });
-  it("IX → 9", () => {
-    expect(romanToInt("IX")).toBe("9");
+
+  test("IV → 4", () => {
+    expect(romanToInt("IV")).toBe(4);
   });
-  it("LVIII → 58", () => {
-    expect(romanToInt("LVIII")).toBe("58");
+
+  test("IX → 9", () => {
+    expect(romanToInt("IX")).toBe(9);
   });
-  it("MCMXCIV → 1994", () => {
-    expect(romanToInt("MCMXCIV")).toBe("1994");
+
+  test("LVIII → 58", () => {
+    expect(romanToInt("LVIII")).toBe(58);
   });
-  it("lower-case строки", () => {
+
+  test("MCMXCIV → 1994", () => {
+    expect(romanToInt("MCMXCIV")).toBe(1994);
+  });
+
+  test("lower-case строки", () => {
     expect(() => romanToInt("be")).toThrow();
   });
-  it("некорректные символы", () => {
-    expect(() => romanToInt("be")).toThrow();
+
+  test("некорректные символы", () => {
+    expect(() => romanToInt("hello")).toThrowError("no lowercase allowed");
+    expect(() => romanToInt("ABC")).toThrowError("wrong symbol");
+    expect(() => romanToInt(1)).toThrowError(TypeError);
+    expect(() => romanToInt("")).toThrowError("string is too short");
   });
 });
