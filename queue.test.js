@@ -10,11 +10,11 @@ class Queue {
   dequeue() {
     const [_, ...rest] = this.items;
     this.items = rest;
-    return this.peek;
+    return _ ?? null;
   }
 
   get peek() {
-    return this.items[0] || null;
+    return this.items[0] ?? null;
   }
 
   get size() {
@@ -31,15 +31,15 @@ describe("My Queue", () => {
 
   beforeEach(() => {
     queue = new Queue();
-    expect(queue.isEmpty).toBe(true);
   });
 
-  it("is created empty", () => {
+  test("is created empty", () => {
+    expect(queue.isEmpty).toBe(true);
     expect(queue.peek).toBe(null);
     expect(queue.size).toBe(0);
   });
 
-  it("is increases after enqueue", () => {
+  test("is increased after enqueue", () => {
     expect(queue.isEmpty).toBe(true);
     queue.enqueue(1);
     expect(queue.size).toBe(1);
@@ -47,7 +47,7 @@ describe("My Queue", () => {
     expect(queue.size).toBe(2);
   });
 
-  it("is decreases after dequeue", () => {
+  test("is decreases after dequeue", () => {
     expect(queue.isEmpty).toBe(true);
     queue.enqueue("1");
     expect(queue.isEmpty).toBe(false);
@@ -60,42 +60,56 @@ describe("My Queue", () => {
     expect(queue.isEmpty).toBe(true);
   });
 
-  it("is shifting elements after dequeue", () => {
+  test("is shifting elements after dequeue", () => {
     queue.enqueue("1");
     queue.enqueue("2");
     queue.enqueue("3");
 
     expect(queue.size).toBe(3);
     expect(queue.peek).toBe("1");
-    expect(queue.items[queue.size - 1]).toBe("3");
 
     queue.dequeue();
+
     expect(queue.peek).toBe("2");
-    expect(queue.items[queue.size - 1]).toBe("3");
     expect(queue.size).toBe(2);
   });
 
-  it("is peek returns but not deletes", () => {
+  test("is following FIFO", () => {
+    queue.enqueue("1");
+    queue.enqueue("2");
+    queue.enqueue("3");
+
+    expect(queue.peek).toBe("1");
+
+    const item = queue.dequeue();
+    expect(item).toBe("1");
+
+    expect(queue.peek).toBe("2");
+  });
+
+  test("is peek returns but not deletes", () => {
     const element = "1";
     queue.enqueue(element);
     expect(queue.size).toBe(1);
 
-    const peek = queue.peek;
-
-    expect(element).toBe(peek);
+    expect(element).toBe(queue.peek);
 
     expect(queue.size).toBe(1);
   });
 
-  it("is null when dequeue empty", () => {
+  test("is null when dequeue empty", () => {
     queue.enqueue("1");
     queue.enqueue("2");
 
-    expect(queue.dequeue()).toBe("2");
-    expect(queue.dequeue()).toBe(null);
+    const one = queue.dequeue();
+    expect(one).toBe("1");
+    const two = queue.dequeue();
+    expect(two).toBe("2");
+    const none = queue.dequeue();
+    expect(none).toBe(null);
   });
 
-  it("is null when peek empty", () => {
+  test("is null when peek empty", () => {
     expect(queue.peek).toBe(null);
 
     queue.enqueue("1");
