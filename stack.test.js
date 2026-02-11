@@ -1,3 +1,7 @@
+const errorCodes = {
+  POPPING_OUT_OF_RANGE: "Popping out of range",
+};
+
 class Stack {
   constructor() {
     this.top = -1;
@@ -14,6 +18,9 @@ class Stack {
   }
 
   pop() {
+    if (this.top <= -1) {
+      throw new Error("Popping out of range");
+    }
     const item = this.items[this.top];
     delete this.items[this.top];
     this.top -= 1;
@@ -28,30 +35,39 @@ describe("My Stack", () => {
     stack = new Stack();
   });
 
-  it("is created empty", () => {
-    expect(stack.top).toBe(-1);
-    expect(stack.items).toEqual({});
+  test("is created empty", () => {
+    expect(stack.peek).toBeUndefined();
+    expect(stack.pop).toThrow();
   });
 
-  it("can push to the top", () => {
+  test("can push to the top", () => {
     stack.push("🥑");
-    expect(stack.top).toBe(0);
     expect(stack.peek).toBe("🥑");
 
     stack.push("🌽");
-    expect(stack.top).toBe(1);
     expect(stack.peek).toBe("🌽");
   });
 
-  it("can pop off", () => {
+  test("can pop off", () => {
     stack.push("🥑");
     stack.push("🌽");
 
-    expect(stack.top).toBe(1);
     expect(stack.peek).toBe("🌽");
-
     stack.pop();
-    expect(stack.top).toBe(0);
     expect(stack.peek).toBe("🥑");
+    stack.pop();
+    expect(stack.peek).toBeUndefined();
+  });
+
+  test("pop returns popped item", () => {
+    stack.push("🌽");
+
+    const popCorn = stack.pop();
+
+    expect(popCorn).toBe("🌽");
+  });
+
+  test("throws when popping empty stack", () => {
+    expect(() => stack.pop()).toThrow(errorCodes.POPPING_OUT_OF_RANGE);
   });
 });
