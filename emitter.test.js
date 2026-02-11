@@ -109,9 +109,7 @@ describe("Event Emitter", () => {
 
   test("вызов несуществующего события не падает", () => {
     expect(() => {
-      const handler = mock(() => {});
-      emitter.once("event1", handler);
-      emitter.emit("event2");
+      emitter.emit("nope");
     }).not.toThrow();
   });
 
